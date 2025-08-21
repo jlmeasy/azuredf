@@ -1,0 +1,9 @@
+{
+	"name": "dalmaciojr-masayon-df",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a6b693ea-4335-416c-95e1-2862de379783",
+		"tenantId": "5cf868ef-f626-4dce-9ade-2a71aab56761"
+	}
+}
