@@ -24,6 +24,13 @@
 						"type": "LinkedServiceReference"
 					},
 					"name": "SinkPurchaseAddress"
+				},
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkProduct"
 				}
 			],
 			"sinks": [],
@@ -66,7 +73,13 @@
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet',",
 				"     fileSystem: 'datalake',",
-				"     wildcardPaths:['Gold/ProductDatabase/PurchaseAddress']) ~> SinkPurchaseAddress"
+				"     wildcardPaths:['Gold/ProductDatabase/PurchaseAddress']) ~> SinkPurchaseAddress",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Gold/ProductDatabase/Product']) ~> SinkProduct"
 			]
 		}
 	}
