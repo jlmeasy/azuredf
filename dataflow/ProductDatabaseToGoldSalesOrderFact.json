@@ -1,0 +1,157 @@
+{
+	"name": "ProductDatabaseToGoldSalesOrderFact",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SourceSilver"
+				},
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkFileSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkPurchaseAddress"
+				},
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkProduct"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkOrderFact"
+				}
+			],
+			"transformations": [
+				{
+					"name": "JoinFileSource"
+				},
+				{
+					"name": "JoinPurchaseAddress"
+				},
+				{
+					"name": "JoinProduct"
+				},
+				{
+					"name": "SalesOrderColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          OrderID as integer,",
+				"          Product as string,",
+				"          QuantityOrdered as integer,",
+				"          PriceEach as double,",
+				"          OrderDate as timestamp,",
+				"          PurchaseStreet as string,",
+				"          PurchaseCity as string,",
+				"          PurchaseState as string,",
+				"          PurchaseZipCode as string,",
+				"          FileName as string,",
+				"          LoadDate as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Silver/ProductDatabase']) ~> SourceSilver",
+				"source(output(",
+				"          FileName as string,",
+				"          LoadDate as date,",
+				"          FileSourceID as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Gold/ProductDatabase/FileSource']) ~> SinkFileSource",
+				"source(output(",
+				"          PurchaseStreet as string,",
+				"          PurchaseCity as string,",
+				"          PurchaseState as string,",
+				"          PurchaseZipCode as string,",
+				"          PurchaseAddressID as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Gold/ProductDatabase/PurchaseAddress']) ~> SinkPurchaseAddress",
+				"source(output(",
+				"          Product as string,",
+				"          PriceEach as double,",
+				"          ProductID as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Gold/ProductDatabase/Product']) ~> SinkProduct",
+				"SourceSilver, SinkFileSource join(SourceSilver@FileName == SinkFileSource@FileName",
+				"     && SourceSilver@LoadDate == SinkFileSource@LoadDate,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinFileSource",
+				"JoinFileSource, SinkPurchaseAddress join(SourceSilver@PurchaseStreet == SinkPurchaseAddress@PurchaseStreet",
+				"     && SourceSilver@PurchaseCity == SinkPurchaseAddress@PurchaseCity",
+				"     && SourceSilver@PurchaseState == SinkPurchaseAddress@PurchaseState",
+				"     && SourceSilver@PurchaseZipCode == SinkPurchaseAddress@PurchaseZipCode,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinPurchaseAddress",
+				"JoinPurchaseAddress, SinkProduct join(SourceSilver@Product == SinkProduct@Product,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinProduct",
+				"JoinProduct select(mapColumn(",
+				"          OrderID,",
+				"          ProductID,",
+				"          OrderDate,",
+				"          QuantityOrdered,",
+				"          PurchaseAddressID,",
+				"          FileSourceID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SalesOrderColumns",
+				"SalesOrderColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     folderPath: 'Gold/ProductDatabase/SalesOrderFact',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SinkOrderFact"
+			]
+		}
+	}
+}

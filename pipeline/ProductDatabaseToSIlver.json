@@ -1,9 +1,9 @@
 {
-	"name": "ProductDatabaseToBronze",
+	"name": "ProductDatabaseToSIlver",
 	"properties": {
 		"activities": [
 			{
-				"name": "ProductDatabaseToBronze",
+				"name": "ProductDatabaseToSilver",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "ProductDatabasetoBronze",
+						"referenceName": "ProductDatabaseToSilver_copy1",
 						"type": "DataFlowReference"
 					},
 					"compute": {
