@@ -37,6 +37,12 @@
 			"transformations": [
 				{
 					"name": "JoinFileSource"
+				},
+				{
+					"name": "JoinPurchaseAddress"
+				},
+				{
+					"name": "JoinProduct"
 				}
 			],
 			"scriptLines": [
@@ -94,11 +100,25 @@
 				"     format: 'parquet',",
 				"     fileSystem: 'datalake',",
 				"     wildcardPaths:['Gold/ProductDatabase/Product']) ~> SinkProduct",
-				"SourceSilver, SinkFileSource join(SourceSilver@FileName == SinkFileSource@FileName,",
+				"SourceSilver, SinkFileSource join(SourceSilver@FileName == SinkFileSource@FileName",
+				"     && SourceSilver@LoadDate == SinkFileSource@LoadDate,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> JoinFileSource"
+				"     broadcast: 'auto')~> JoinFileSource",
+				"JoinFileSource, SinkPurchaseAddress join(SourceSilver@PurchaseStreet == SinkPurchaseAddress@PurchaseStreet",
+				"     && SourceSilver@PurchaseCity == SinkPurchaseAddress@PurchaseCity",
+				"     && SourceSilver@PurchaseState == SinkPurchaseAddress@PurchaseState",
+				"     && SourceSilver@PurchaseZipCode == SinkPurchaseAddress@PurchaseZipCode,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinPurchaseAddress",
+				"JoinPurchaseAddress, SinkProduct join(SourceSilver@Product == SinkProduct@Product,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinProduct"
 			]
 		}
 	}
