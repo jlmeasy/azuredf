@@ -45,7 +45,6 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     limit: 100,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet',",
 				"     fileSystem: 'datalake',",
@@ -65,7 +64,8 @@
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> GoldSink"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> GoldSink"
 			]
 		}
 	}
