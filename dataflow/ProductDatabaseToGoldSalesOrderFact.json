@@ -1,0 +1,73 @@
+{
+	"name": "ProductDatabaseToGoldSalesOrderFact",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SourceSilver"
+				},
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkFileSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkPurchaseAddress"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          OrderID as integer,",
+				"          Product as string,",
+				"          QuantityOrdered as integer,",
+				"          PriceEach as double,",
+				"          OrderDate as timestamp,",
+				"          PurchaseStreet as string,",
+				"          PurchaseCity as string,",
+				"          PurchaseState as string,",
+				"          PurchaseZipCode as string,",
+				"          FileName as string,",
+				"          LoadDate as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Silver/ProductDatabase']) ~> SourceSilver",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Gold/ProductDatabase/FileSource']) ~> SinkFileSource",
+				"source(output(",
+				"          PurchaseStreet as string,",
+				"          PurchaseCity as string,",
+				"          PurchaseState as string,",
+				"          PurchaseZipCode as string,",
+				"          PurchaseAddressID as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     wildcardPaths:['Gold/ProductDatabase/PurchaseAddress']) ~> SinkPurchaseAddress"
+			]
+		}
+	}
+}
