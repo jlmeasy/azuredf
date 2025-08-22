@@ -34,7 +34,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "JoinFileSource"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          OrderID as integer,",
@@ -89,7 +93,12 @@
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet',",
 				"     fileSystem: 'datalake',",
-				"     wildcardPaths:['Gold/ProductDatabase/Product']) ~> SinkProduct"
+				"     wildcardPaths:['Gold/ProductDatabase/Product']) ~> SinkProduct",
+				"SourceSilver, SinkFileSource join(SourceSilver@FileName == SinkFileSource@FileName,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinFileSource"
 			]
 		}
 	}
