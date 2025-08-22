@@ -59,6 +59,7 @@
 				"     format: 'parquet',",
 				"     fileSystem: 'datalake',",
 				"     folderPath: 'Gold/ProductDatabase/Product',",
+				"     truncate: true,",
 				"     partitionFileNames:['Product.parquet'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
