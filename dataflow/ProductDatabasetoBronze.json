@@ -1,0 +1,81 @@
+{
+	"name": "ProductDatabasetoBronze",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "ProductDatabaseRaw",
+					"description": "Raw data"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "Datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "ProductDatabaseBronze"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AddLoadDate"
+				},
+				{
+					"name": "RenameColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Order ID} as string,",
+				"          Product as string,",
+				"          {Quantity Ordered} as string,",
+				"          {Price Each} as string,",
+				"          {Order Date} as string,",
+				"          {Purchase Address} as string",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     rowUrlColumn: 'FileName',",
+				"     format: 'delimited',",
+				"     fileSystem: 'datalake',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     wildcardPaths:['Raw/ProductDatabase/*.csv']) ~> ProductDatabaseRaw",
+				"ProductDatabaseRaw derive(LoadDate = currentDate()) ~> AddLoadDate",
+				"AddLoadDate select(mapColumn(",
+				"          OrderID = {Order ID},",
+				"          Product,",
+				"          QuantityOrdered = {Quantity Ordered},",
+				"          PriceEach = {Price Each},",
+				"          OrderDate = {Order Date},",
+				"          PurchaseAddress = {Purchase Address},",
+				"          FileName,",
+				"          LoadDate",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> RenameColumns",
+				"RenameColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datalake',",
+				"     folderPath: 'Bronze/ProductDatabase',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ProductDatabaseBronze"
+			]
+		}
+	}
+}
