@@ -15,8 +15,26 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".new"
+						}
+					},
 					"enableStaging": false
-				}
+				},
+				"outputs": [
+					{
+						"referenceName": "AzureDataLakeDelimitedText",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
