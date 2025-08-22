@@ -91,6 +91,7 @@
 				"     format: 'parquet',",
 				"     fileSystem: 'datalake',",
 				"     folderPath: 'Silver/ProductDatabase',",
+				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
