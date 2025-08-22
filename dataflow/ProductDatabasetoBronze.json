@@ -42,7 +42,6 @@
 				"     useSchema: false,",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     limit: 100,",
 				"     ignoreNoFilesFound: false,",
 				"     rowUrlColumn: 'FileName',",
 				"     format: 'delimited',",
