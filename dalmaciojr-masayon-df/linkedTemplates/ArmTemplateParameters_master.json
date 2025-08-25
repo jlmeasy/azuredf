@@ -20,6 +20,12 @@
 		"ADLSGen2_properties_typeProperties_url": {
 			"value": "https://storageeo5bnndkb2dhu.dfs.core.windows.net/"
 		},
+		"AzureSqlDW_properties_typeProperties_server": {
+			"value": "myserver132.database.windows.net"
+		},
+		"AzureSqlDW_properties_typeProperties_database": {
+			"value": "mydatabase105"
+		},
 		"Datalake_properties_typeProperties_url": {
 			"value": "https://storageaccntdl.dfs.core.windows.net/"
 		},

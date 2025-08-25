@@ -27,6 +27,14 @@
 			"type": "string",
 			"defaultValue": "https://storageeo5bnndkb2dhu.dfs.core.windows.net/"
 		},
+		"AzureSqlDW_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "myserver132.database.windows.net"
+		},
+		"AzureSqlDW_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "mydatabase105"
+		},
 		"Datalake_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storageaccntdl.dfs.core.windows.net/"
@@ -73,12 +81,38 @@
 					"ADLSGen2_properties_typeProperties_url": {
 						"value": "[parameters('ADLSGen2_properties_typeProperties_url')]"
 					},
+					"AzureSqlDW_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDW_properties_typeProperties_server')]"
+					},
+					"AzureSqlDW_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDW_properties_typeProperties_database')]"
+					},
 					"Datalake_properties_typeProperties_url": {
 						"value": "[parameters('Datalake_properties_typeProperties_url')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "dalmaciojr-masayon-df_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'dalmaciojr-masayon-df_ArmTemplate_0')]"
+			]
 		}
 	]
 }
