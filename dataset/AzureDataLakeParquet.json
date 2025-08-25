@@ -1,0 +1,61 @@
+{
+	"name": "AzureDataLakeParquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Datalake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FolderPath": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().FolderPath",
+					"type": "Expression"
+				},
+				"fileSystem": "datalake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "OrderID",
+				"type": "UTF8"
+			},
+			{
+				"name": "Product",
+				"type": "UTF8"
+			},
+			{
+				"name": "QuantityOrdered",
+				"type": "UTF8"
+			},
+			{
+				"name": "PriceEach",
+				"type": "UTF8"
+			},
+			{
+				"name": "OrderDate",
+				"type": "UTF8"
+			},
+			{
+				"name": "PurchaseAddress",
+				"type": "UTF8"
+			},
+			{
+				"name": "FileName",
+				"type": "UTF8"
+			},
+			{
+				"name": "LoadDate",
+				"type": "DATE"
+			}
+		]
+	}
+}

@@ -1,5 +1,5 @@
 {
-	"name": "SQLProductDatabaseToBronze",
+	"name": "SQLProductDatabaseToBronze_copy1",
 	"properties": {
 		"activities": [
 			{
@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delete Brinze Parquet",
+						"activity": "Delete Bronze Parquet",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -26,7 +26,7 @@
 						"type": "DelimitedTextSource",
 						"additionalColumns": [
 							{
-								"name": "FilaName",
+								"name": "FileName",
 								"value": "$$FILENAME"
 							},
 							{
@@ -40,8 +40,8 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "Test",
-							"wildcardFileName": "emp.txt",
+							"wildcardFolderPath": "Raw/ProductDatabase",
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -61,6 +61,97 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Order ID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OrderID",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Product",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Product",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Quantity Ordered",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "QuantityOrdered",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Price Each",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PriceEach",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Order Date",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OrderDate",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Purchase Address",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PurchaseAddress",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "FileName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FileName",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "LoadDate",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LoadDate",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -85,7 +176,7 @@
 				]
 			},
 			{
-				"name": "Delete Brinze Parquet",
+				"name": "Delete Bronze Parquet",
 				"type": "Delete",
 				"dependsOn": [],
 				"policy": {
