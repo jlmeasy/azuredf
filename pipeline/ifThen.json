@@ -1,0 +1,60 @@
+{
+	"name": "ifThen",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Positive",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greaterOrEquals(variables('Input'),0)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set Negative Message",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Message",
+								"value": "The input value is less than zero"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Set Positive Message",
+							"description": "The value is greater than or equal to zero",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": []
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"Input": {
+				"type": "Integer"
+			},
+			"Message": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ADF Example Pipes"
+		},
+		"annotations": []
+	}
+}
