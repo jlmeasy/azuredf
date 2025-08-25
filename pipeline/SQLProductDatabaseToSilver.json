@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Copy to SQL",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -64,6 +64,33 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "SalesOrderLoad",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy to SQL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[Stage].[SalesOrderLoad]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDW",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
