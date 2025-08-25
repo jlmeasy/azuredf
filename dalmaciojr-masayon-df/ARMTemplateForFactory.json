@@ -194,6 +194,65 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ParameterAndReturnValue')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Add Number And Return Values",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pipelineReturnValue",
+							"value": [
+								{
+									"key": "SumAandB",
+									"value": {
+										"type": "Expression",
+										"content": "@add(pipeline().parameters.SummandA,pipeline().parameters.SummandB)"
+									}
+								}
+							],
+							"setSystemVariable": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"SummandA": {
+						"type": "int"
+					},
+					"SummandB": {
+						"type": "int"
+					}
+				},
+				"variables": {
+					"A": {
+						"type": "Integer"
+					},
+					"B": {
+						"type": "Integer"
+					},
+					"Result": {
+						"type": "Integer"
+					}
+				},
+				"folder": {
+					"name": "ADF Example Pipes"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ProductDatabaseToBronze')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1146,6 +1205,510 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AzureDataLakeDelimitedText')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Variable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Add Number And Set Results",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Result",
+							"value": {
+								"value": "@add(variables('A'),variables('B'))",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"A": {
+						"type": "Integer",
+						"defaultValue": 10
+					},
+					"B": {
+						"type": "Integer",
+						"defaultValue": 15
+					},
+					"Result": {
+						"type": "Integer"
+					}
+				},
+				"folder": {
+					"name": "ADF Example Pipes"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VariableAndParameter')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Add Number And Set Results",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Set A",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Set B",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Result",
+							"value": {
+								"value": "@add(variables('A'),variables('B'))",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set A",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "A",
+							"value": {
+								"value": "@pipeline().parameters.SummandA",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set B",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "B",
+							"value": {
+								"value": "@pipeline().parameters.SummandB",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"SummandA": {
+						"type": "int"
+					},
+					"SummandB": {
+						"type": "int"
+					}
+				},
+				"variables": {
+					"A": {
+						"type": "Integer"
+					},
+					"B": {
+						"type": "Integer"
+					},
+					"Result": {
+						"type": "Integer"
+					}
+				},
+				"folder": {
+					"name": "ADF Example Pipes"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/forEach')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get DataLake File Names",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "AzureDataLakeParquet",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderPath": "Raw/ProductDatabase/"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "ParquetReadSettings"
+							}
+						}
+					},
+					{
+						"name": "For Each File",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get DataLake File Names",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get DataLake File Names').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy File",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "ParquetSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"wildcardFolderPath": "Raw/ProductDatabase/",
+												"wildcardFileName": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "ParquetReadSettings"
+											}
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "AzureDataLakeParquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"FolderPath": "Raw/ProductDatabase/"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureDataLakeParquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"FolderPath": "Raw/ProductDatabase/Demo/"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Input": {
+						"type": "Integer"
+					},
+					"Message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "ADF Example Pipes"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureDataLakeParquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ifThen')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "If Positive",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Set Input",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@greaterOrEquals(variables('Input'),0)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Set Negative Message",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Message",
+										"value": "The input value is less than zero"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Set Positive Message",
+									"description": "The value is greater than or equal to zero",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Message",
+										"value": "The input value is greater than or equal to zero"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Set Input",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Input",
+							"value": 2
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Input": {
+						"type": "Integer"
+					},
+					"Message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "ADF Example Pipes"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/switchPipe')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set Input",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Input",
+							"value": -2
+						}
+					},
+					{
+						"name": "Test Value",
+						"type": "Switch",
+						"dependsOn": [
+							{
+								"activity": "Set Input",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@if(less(variables('Input'),0),\n     'Negative',\n    if(equals(variables('Input'),0),\n       'Zero',\n       'Positive')\n)",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "Positive",
+									"activities": [
+										{
+											"name": "Set Positive",
+											"type": "SetVariable",
+											"dependsOn": [],
+											"policy": {
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "Message",
+												"value": "The value is positive"
+											}
+										}
+									]
+								},
+								{
+									"value": "Zero",
+									"activities": [
+										{
+											"name": "Set Zero",
+											"type": "SetVariable",
+											"dependsOn": [],
+											"policy": {
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "Message",
+												"value": "The value is zero\n"
+											}
+										}
+									]
+								},
+								{
+									"value": "Negative",
+									"activities": [
+										{
+											"name": "Set Negative",
+											"type": "SetVariable",
+											"dependsOn": [],
+											"policy": {
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "Message",
+												"value": "The value is negative\n"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Input": {
+						"type": "Integer"
+					},
+					"Message": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "ADF Example Pipes"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeDelimitedText')]",
