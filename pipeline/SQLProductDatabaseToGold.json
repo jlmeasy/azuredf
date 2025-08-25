@@ -42,7 +42,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[Stage].[SalesOrderLoad]"
+					"storedProcedureName": "[Stage].[SalesOrderFactLoad]"
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureSqlDW",
