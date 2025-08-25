@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "CopyFromRawToBronze",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -57,7 +57,10 @@
 				"outputs": [
 					{
 						"referenceName": "AzureDataLakeParquet",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FolderPath": "Bronze/ProductDatabase"
+						}
 					}
 				]
 			}
