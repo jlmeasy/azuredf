@@ -54,7 +54,11 @@
 				"outputs": [
 					{
 						"referenceName": "AzureSqlDatabaseTable",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Schema": "dbo",
+							"TableName": "Test"
+						}
 					}
 				]
 			}
