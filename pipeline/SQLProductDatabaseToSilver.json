@@ -30,8 +30,10 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "drop table if exists  Stage.SalesOrderTemp\ncreate table Stage.SalesOrderTemp\n(\n    OrderID varchar(max),\n    Product varchar(max),\n    QuantityOrdered varchar(max),\n    PriceEach varchar(max),\n    OrderDate varchar(max),\n    PurchaseAddress varchar(max),\n    FileName varchar(max),\n    LoadDate varchar(max)\n)",
 						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"sqlWriterUseTableLock": true,
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -55,7 +57,11 @@
 				"outputs": [
 					{
 						"referenceName": "AzureSqlDatabaseTable",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Schema": "Stage",
+							"TableName": "SalesOrderTemp"
+						}
 					}
 				]
 			}
