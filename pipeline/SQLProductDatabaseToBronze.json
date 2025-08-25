@@ -5,7 +5,14 @@
 			{
 				"name": "CopyFromRawToBronze",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Delete Brinze Parquet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -63,6 +70,35 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Delete Brinze Parquet",
+				"type": "Delete",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "AzureDataLakeParquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"FolderPath": "Bronze/ProductDatabase"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*.parquet",
+						"enablePartitionDiscovery": false
+					}
+				}
 			}
 		],
 		"folder": {
