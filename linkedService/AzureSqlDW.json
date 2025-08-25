@@ -1,0 +1,14 @@
+{
+	"name": "AzureSqlDW",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "myserver132.database.windows.net",
+			"database": "mydatabase105",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SystemAssignedManagedIdentity"
+		}
+	}
+}
