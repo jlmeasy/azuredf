@@ -1,0 +1,111 @@
+{
+	"name": "switchPipe",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set Input",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Input",
+					"value": -2
+				}
+			},
+			{
+				"name": "Test Value",
+				"type": "Switch",
+				"dependsOn": [
+					{
+						"activity": "Set Input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@if(less(variables('Input'),0),\n     'Negative',\n    if(equals(variables('Input'),0),\n       'Zero',\n       'Positive')\n)",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "Positive",
+							"activities": [
+								{
+									"name": "Set Positive",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Message",
+										"value": "The value is positive"
+									}
+								}
+							]
+						},
+						{
+							"value": "Zero",
+							"activities": [
+								{
+									"name": "Set Zero",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Message",
+										"value": "The value is zero\n"
+									}
+								}
+							]
+						},
+						{
+							"value": "Negative",
+							"activities": [
+								{
+									"name": "Set Negative",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Message",
+										"value": "The value is negative\n"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"Input": {
+				"type": "Integer"
+			},
+			"Message": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ADF Example Pipes"
+		},
+		"annotations": []
+	}
+}

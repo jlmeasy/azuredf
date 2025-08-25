@@ -1,0 +1,41 @@
+{
+	"name": "Variable",
+	"properties": {
+		"activities": [
+			{
+				"name": "Add Number And Set Results",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Result",
+					"value": {
+						"value": "@add(variables('A'),variables('B'))",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"A": {
+				"type": "Integer",
+				"defaultValue": 10
+			},
+			"B": {
+				"type": "Integer",
+				"defaultValue": 15
+			},
+			"Result": {
+				"type": "Integer"
+			}
+		},
+		"folder": {
+			"name": "ADF Example Pipes"
+		},
+		"annotations": []
+	}
+}

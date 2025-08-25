@@ -1,0 +1,53 @@
+{
+	"name": "ParameterAndReturnValue",
+	"properties": {
+		"activities": [
+			{
+				"name": "Add Number And Return Values",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "SumAandB",
+							"value": {
+								"type": "Expression",
+								"content": "@add(pipeline().parameters.SummandA,pipeline().parameters.SummandB)"
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"parameters": {
+			"SummandA": {
+				"type": "int"
+			},
+			"SummandB": {
+				"type": "int"
+			}
+		},
+		"variables": {
+			"A": {
+				"type": "Integer"
+			},
+			"B": {
+				"type": "Integer"
+			},
+			"Result": {
+				"type": "Integer"
+			}
+		},
+		"folder": {
+			"name": "ADF Example Pipes"
+		},
+		"annotations": []
+	}
+}
